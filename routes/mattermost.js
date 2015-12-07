@@ -6,12 +6,12 @@ var returnVal = {posts: [{}]};
 var token = "";
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/:chatroomid/:chatroomname/:username/:password', function(req, res, next) {
   
   request({ method: 'POST',
             uri: 'https://chat.digitaladrenalin.net/api/v1/users/login',
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({name:"dadrenalin",email:"mdigiac1@me.com",password:"t3AjxB5p"})
+            body: JSON.stringify({name:req.params.chatroomname,email:req.params.username,password:req.params.password})
           },
     function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
       token = response.headers.token;
       
       request({ method: 'GET',
-                uri: 'https://chat.digitaladrenalin.net/api/v1/channels/gpxucn1bp3ra3ci7k5szte3eow/posts/0/100',
+                uri: 'https://chat.digitaladrenalin.net/api/v1/channels/' + req.params.chatroomid + '/posts/0/100',
                 headers: {Authorization: "Bearer " + token }
       }, function(error, response, body){
         
@@ -29,7 +29,7 @@ router.get('/', function(req, res, next) {
         var order = parsebody.order;
         
         request({ method: 'GET',
-                uri: 'https://chat.digitaladrenalin.net/api/v1/channels/gpxucn1bp3ra3ci7k5szte3eow/extra_info',
+                uri: 'https://chat.digitaladrenalin.net/api/v1/channels/' + req.params.chatroomid + '/extra_info',
                 headers: {Authorization: "Bearer " + token }
         }, function(error, response, body){
           
